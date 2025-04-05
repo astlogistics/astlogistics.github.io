@@ -101,19 +101,18 @@
 </head>
 <body>
 
-    <div class="navbar" id="navbar">
-        <span class="menu-icon" onclick="toggleNavbar()">&#9776;</span>
-        <div class="links">
-          <a href="index.html">About Us</a>
-          <a href="vehicles.html">Vehicles</a>
-          <a href="admin-login.html">Admin Login</a>
-          <a href="admin-dashboard.html">Admin Dashboard</a>
-          <a href="contact.html">Contact</a>
-          <a href="testimonials.html">Testimonials</a>
-          <a href="gallery.html">Gallery</a>
-        </div>
-      </div>
-      
+  <div class="navbar" id="navbar">
+    <span class="menu-icon" onclick="toggleNavbar()">&#9776;</span>
+    <div class="links">
+      <a href="index.html">About Us</a>
+      <a href="vehicles.html">Vehicles</a>
+      <a href="admin-login.html">Admin Login</a>
+      <a href="admin-dashboard.html">Admin Dashboard</a>
+      <a href="contact.html">Contact</a>
+      <a href="testimonials.html">Testimonials</a>
+      <a href="gallery.html">Gallery</a>
+    </div>
+  </div>
 
   <div class="content">
     <h1>Admin Dashboard</h1>
@@ -221,14 +220,21 @@
 
     function loadContacts() {
       const table = document.getElementById("contactTable");
-      const messages = JSON.parse(localStorage.getItem("contactMessages") || "[]");
+      const messages = JSON.parse(localStorage.getItem("communication") || "[]");
       if (!messages.length) {
         table.innerHTML = "<tr><td>No messages</td></tr>";
         return;
       }
-      let html = "<thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Message</th></tr></thead><tbody>";
+      let html = "<thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Vehicle Size</th><th>Message</th><th>Date</th></tr></thead><tbody>";
       messages.forEach(msg => {
-        html += `<tr><td>${msg.name}</td><td>${msg.email}</td><td>${msg.phone}</td><td>${msg.message}</td></tr>`;
+        html += `<tr>
+          <td>${msg.name}</td>
+          <td>${msg.email}</td>
+          <td>${msg.phone}</td>
+          <td>${msg.vehicleSize}</td>
+          <td>${msg.message}</td>
+          <td>${msg.date || ''}</td>
+        </tr>`;
       });
       html += "</tbody>";
       table.innerHTML = html;
