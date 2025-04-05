@@ -72,6 +72,7 @@
     th, td {
       padding: 8px;
       border: 1px solid #ccc;
+      text-align: left;
     }
 
     th {
@@ -144,7 +145,7 @@
     const fields = {
       vehicles: ["name", "type", "available", "nextDate"],
       tripLogs: ["vehicle", "date", "destination", "status"],
-      expenses: ["description", "amount", "date"],
+      expenses: ["description", "amount", "date"]
     };
 
     function checkLogin() {
@@ -221,23 +222,34 @@
     function loadContacts() {
       const table = document.getElementById("contactTable");
       const messages = JSON.parse(localStorage.getItem("communication") || "[]");
+
+      let html = "<thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Vehicle Size</th><th>Message</th><th>Date</th><th>Actions</th></tr></thead><tbody>";
+
       if (!messages.length) {
-        table.innerHTML = "<tr><td>No messages</td></tr>";
-        return;
+        html += "<tr><td colspan='7'>No messages</td></tr>";
+      } else {
+        messages.forEach((msg, index) => {
+          html += `<tr>
+            <td>${msg.name}</td>
+            <td>${msg.email}</td>
+            <td>${msg.phone}</td>
+            <td>${msg.vehicleSize}</td>
+            <td>${msg.message}</td>
+            <td>${msg.date || ''}</td>
+            <td><button onclick="deleteContact(${index})">Delete</button></td>
+          </tr>`;
+        });
       }
-      let html = "<thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Vehicle Size</th><th>Message</th><th>Date</th></tr></thead><tbody>";
-      messages.forEach(msg => {
-        html += `<tr>
-          <td>${msg.name}</td>
-          <td>${msg.email}</td>
-          <td>${msg.phone}</td>
-          <td>${msg.vehicleSize}</td>
-          <td>${msg.message}</td>
-          <td>${msg.date || ''}</td>
-        </tr>`;
-      });
+
       html += "</tbody>";
       table.innerHTML = html;
+    }
+
+    function deleteContact(index) {
+      const messages = JSON.parse(localStorage.getItem("communication") || "[]");
+      messages.splice(index, 1);
+      localStorage.setItem("communication", JSON.stringify(messages));
+      loadContacts();
     }
 
     // Run on load
