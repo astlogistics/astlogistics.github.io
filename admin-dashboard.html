@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard - AST Logistics</title>
+  <style>
+    body {
+      background-color: #fff8f0;
+      font-family: Arial, sans-serif;
+      color: #3e2615;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: #4b2e1e;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .navbar a {
+      float: left;
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .navbar a:hover {
+      background-color: #3a1f13;
+    }
+
+    .navbar .menu-icon {
+      display: none;
+      float: right;
+      font-size: 26px;
+      padding: 14px 20px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .navbar .links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    @media screen and (max-width: 768px) {
+      .navbar a { float: none; display: none; width: 100%; text-align: left; }
+      .navbar .menu-icon { display: block; }
+      .navbar.responsive a { display: block; }
+      .navbar.responsive .links { flex-direction: column; }
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    h1, h2 {
+      color: #4b2e1e;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background-color: white;
+    }
+
+    th, td {
+      padding: 8px;
+      border: 1px solid #ccc;
+    }
+
+    th {
+      background-color: #d2b48c;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 6px;
+    }
+
+    button {
+      margin: 10px 5px 0 0;
+      padding: 8px 12px;
+      background-color: #4b2e1e;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #6b3e2a;
+    }
+  </style>
+</head>
+<body>
+
+    <div class="navbar" id="navbar">
+        <span class="menu-icon" onclick="toggleNavbar()">&#9776;</span>
+        <div class="links">
+          <a href="index.html">About Us</a>
+          <a href="vehicles.html">Vehicles</a>
+          <a href="admin-login.html">Admin Login</a>
+          <a href="admin-dashboard.html">Admin Dashboard</a>
+          <a href="contact.html">Contact</a>
+          <a href="testimonials.html">Testimonials</a>
+          <a href="gallery.html">Gallery</a>
+        </div>
+      </div>
+      
+
+  <div class="content">
+    <h1>Admin Dashboard</h1>
+    <button onclick="logout()">Logout</button>
+    <button onclick="goToVehicles()">Go to Vehicles Page</button>
+    <button onclick="goToRegister()">Create New Admin</button>
+
+    <h2>Vehicles</h2>
+    <table id="vehicleTable"></table>
+    <button onclick="addRow('vehicles')">Add Vehicle</button>
+
+    <h2>Trip Logs</h2>
+    <table id="tripLogTable"></table>
+    <button onclick="addRow('tripLogs')">Add Trip Log</button>
+
+    <h2>Expenses</h2>
+    <table id="expenseTable"></table>
+    <button onclick="addRow('expenses')">Add Expense</button>
+
+    <h2>Contact Messages</h2>
+    <table id="contactTable"></table>
+  </div>
+
+  <script>
+    function toggleNavbar() {
+      document.getElementById("navbar").classList.toggle("responsive");
+    }
+
+    const fields = {
+      vehicles: ["name", "type", "available", "nextDate"],
+      tripLogs: ["vehicle", "date", "destination", "status"],
+      expenses: ["description", "amount", "date"],
+    };
+
+    function checkLogin() {
+      const isLoggedIn = localStorage.getItem("loggedIn");
+      if (!isLoggedIn) {
+        alert("Not logged in");
+        window.location.href = "admin-login.html";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      window.location.href = "admin-login.html";
+    }
+
+    function goToVehicles() {
+      window.location.href = "vehicles.html";
+    }
+
+    function goToRegister() {
+      window.location.href = "register-admin.html";
+    }
+
+    function createTable(section, tableId) {
+      const table = document.getElementById(tableId);
+      const data = JSON.parse(localStorage.getItem(section) || "[]");
+      const header = fields[section] || Object.keys(data[0] || {});
+      let html = "<thead><tr>";
+      header.forEach(field => html += `<th>${field}</th>`);
+      html += "<th>Actions</th></tr></thead><tbody>";
+
+      data.forEach((row, index) => {
+        html += `<tr data-index="${index}">`;
+        header.forEach(field => {
+          html += `<td><input value="${row[field] || ''}" onchange="updateData('${section}', ${index}, '${field}', this.value)" /></td>`;
+        });
+        html += `<td><button onclick="deleteRow('${section}', ${index})">Delete</button></td></tr>`;
+      });
+
+      html += "</tbody>";
+      table.innerHTML = html;
+    }
+
+    function updateData(section, index, field, value) {
+      const data = JSON.parse(localStorage.getItem(section) || "[]");
+      if (data[index]) {
+        data[index][field] = value;
+        localStorage.setItem(section, JSON.stringify(data));
+      }
+    }
+
+    function deleteRow(section, index) {
+      const data = JSON.parse(localStorage.getItem(section) || "[]");
+      data.splice(index, 1);
+      localStorage.setItem(section, JSON.stringify(data));
+      createTable(section, getTableId(section));
+    }
+
+    function addRow(section) {
+      const data = JSON.parse(localStorage.getItem(section) || "[]");
+      const newRow = {};
+      (fields[section] || []).forEach(field => newRow[field] = "");
+      data.push(newRow);
+      localStorage.setItem(section, JSON.stringify(data));
+      createTable(section, getTableId(section));
+    }
+
+    function getTableId(section) {
+      if (section === "vehicles") return "vehicleTable";
+      if (section === "tripLogs") return "tripLogTable";
+      if (section === "expenses") return "expenseTable";
+    }
+
+    function loadContacts() {
+      const table = document.getElementById("contactTable");
+      const messages = JSON.parse(localStorage.getItem("contactMessages") || "[]");
+      if (!messages.length) {
+        table.innerHTML = "<tr><td>No messages</td></tr>";
+        return;
+      }
+      let html = "<thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Message</th></tr></thead><tbody>";
+      messages.forEach(msg => {
+        html += `<tr><td>${msg.name}</td><td>${msg.email}</td><td>${msg.phone}</td><td>${msg.message}</td></tr>`;
+      });
+      html += "</tbody>";
+      table.innerHTML = html;
+    }
+
+    // Run on load
+    checkLogin();
+    createTable("vehicles", "vehicleTable");
+    createTable("tripLogs", "tripLogTable");
+    createTable("expenses", "expenseTable");
+    loadContacts();
+  </script>
+
+</body>
+</html>

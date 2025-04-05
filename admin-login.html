@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Login - AST Logistics</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff8f0;
+      color: #3e2615;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: #4b2e1e;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .navbar a {
+      float: left;
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .navbar a:hover {
+      background-color: #3a1f13;
+    }
+
+    .navbar .menu-icon {
+      display: none;
+      float: right;
+      font-size: 26px;
+      padding: 14px 20px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .navbar .links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    @media screen and (max-width: 768px) {
+      .navbar a { float: none; display: none; width: 100%; text-align: left; }
+      .navbar .menu-icon { display: block; }
+      .navbar.responsive a { display: block; }
+      .navbar.responsive .links { flex-direction: column; }
+    }
+
+    .login-container {
+      max-width: 400px;
+      margin: 60px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    h2 {
+      text-align: center;
+      color: #4b2e1e;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background-color: #4b2e1e;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #6b3e2a;
+    }
+
+    .small-link {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar" id="navbar">
+    <span class="menu-icon" onclick="toggleNavbar()">&#9776;</span>
+    <div class="links">
+      <a href="index.html">About Us</a>
+      <a href="vehicles.html">Vehicles</a>
+      <a href="admin-login.html">Admin Login</a>
+      <a href="admin-dashboard.html">Admin Dashboard</a>
+      <a href="contact.html">Contact</a>
+      <a href="testimonials.html">Testimonials</a>
+      <a href="gallery.html">Gallery</a>
+    </div>
+  </div>
+  
+
+  <div class="login-container">
+    <h2>Admin Login</h2>
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="login()">Login</button>
+    <a class="small-link" href="forgot-password.html">Forgot Password?</a>
+    <a class="small-link" href="vehicles.html">Go to Vehicles Page</a>
+  </div>
+
+  <script>
+    function toggleNavbar() {
+      document.getElementById("navbar").classList.toggle("responsive");
+    }
+
+    const hardcodedUsername = "logiast";
+    const hardcodedPassword = "aksainitransport";
+
+    function login() {
+      const username = document.getElementById("username").value.toLowerCase();
+      const password = document.getElementById("password").value;
+
+      const admins = JSON.parse(localStorage.getItem("admins")) || [];
+      const foundAdmin = admins.find(admin => admin.username.toLowerCase() === username && admin.password === password);
+
+      if ((username === hardcodedUsername && password === hardcodedPassword) || foundAdmin) {
+        localStorage.setItem("loggedIn", "true");
+        window.location.href = "admin-dashboard.html";
+      } else {
+        alert("Incorrect username or password.");
+      }
+    }
+  </script>
+</body>
+</html>

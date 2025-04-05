@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gallery - AST Logistics</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff8f0;
+      color: #3e2615;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: #4b2e1e;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .navbar a {
+      float: left;
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .navbar a:hover {
+      background-color: #3a1f13;
+    }
+
+    .navbar .menu-icon {
+      display: none;
+      float: right;
+      font-size: 26px;
+      padding: 14px 20px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .navbar .links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    @media screen and (max-width: 768px) {
+      .navbar a { float: none; display: none; width: 100%; text-align: left; }
+      .navbar .menu-icon { display: block; }
+      .navbar.responsive a { display: block; }
+      .navbar.responsive .links { flex-direction: column; }
+    }
+
+    h1 {
+      text-align: center;
+      color: #4b2e1e;
+      margin-top: 30px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 30px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+    <div class="navbar" id="navbar">
+        <span class="menu-icon" onclick="toggleNavbar()">&#9776;</span>
+        <div class="links">
+          <a href="index.html">About Us</a>
+          <a href="vehicles.html">Vehicles</a>
+          <a href="admin-login.html">Admin Login</a>
+          <a href="admin-dashboard.html">Admin Dashboard</a>
+          <a href="contact.html">Contact</a>
+          <a href="testimonials.html">Testimonials</a>
+          <a href="gallery.html">Gallery</a>
+        </div>
+      </div>
+      
+
+  <h1>Our Fleet</h1>
+
+  <div class="gallery">
+    <img src="https://via.placeholder.com/400x250?text=Red+Big+Truck" alt="Red Big Truck">
+    <img src="https://via.placeholder.com/400x250?text=White+Tata+Ace" alt="White Tata Ace">
+    <img src="https://via.placeholder.com/400x250?text=Big+Truck" alt="Big Truck">
+    <img src="https://via.placeholder.com/400x250?text=On+the+Move" alt="Fleet on the move">
+  </div>
+
+  <script>
+    function toggleNavbar() {
+      const navbar = document.getElementById("navbar");
+      navbar.classList.toggle("responsive");
+    }
+  </script>
+
+</body>
+</html>
